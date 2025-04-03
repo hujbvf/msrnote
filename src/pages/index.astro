@@ -1,11 +1,74 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="MsrNote"
+  description="ノートをかくように簡単にWebサイトが作れるアプリ。"
+  index={true}
+>
+  <main>
+    <h2>プロジェクトの概要</h2>
+    <p>MsrNoteは、ノートをかくように簡単にWebサイトを作成できるアプリです。</p>
+    <h2>プロジェクトの計画</h2>
+    <p>プロジェクトの計画は、Githubとissuesを使って管理しています。</p>
+    <ul>
+      <li>
+        <a href="https://github.com/hujbvf/msrnote">MsrNoteのリポジトリ</a>
+      </li>
+      <li>
+        <a href="https://github.com/users/hujbvf/projects/5"
+          >MsrNoteのプロジェクト</a
+        >
+      </li>
+      <li>
+        <a href="https://github.com/hujbvf/msrnote/issues">MsrNoteのイシュー</a>
+      </li>
+    </ul>
+    <h2>プロジェクトの技術スタック</h2>
+    <p>MsrNoteは、以下の技術スタックで構築されています。</p>
+    <ul>
+      <li>フロントエンド: Astro、Lit</li>
+      <li>バックエンド: Node.js、Astro、Cloudflare Workers</li>
+      <li>データベース: Cloudflare D1</li>
+      <li>オブジェクトストレージ: Cloudflare R2</li>
+      <li>ホスティング: Cloudflare Pages</li>
+    </ul>
+    <h2>プロジェクトの進捗</h2>
+    <p>現在、開発中。</p>
+    <p>開発中のアプリページは<a href="/user/">こちら</a>です。</p>
+  </main>
 </Layout>
+
+<style>
+  main {
+    max-width: 680px;
+    min-height: 100%;
+    padding: 0 var(--base-padding);
+    margin: var(--big-padding) auto;
+  }
+
+  p {
+    margin: var(--base-padding) 0;
+  }
+  h2 {
+    font-size: var(--big-font);
+    margin: var(--base-padding) 0;
+  }
+  h3 {
+    padding-left: var(--small-padding);
+    margin: var(--base-padding) 0;
+    border-left: solid 2.5px var(--dark-color);
+  }
+
+  ul {
+    margin: var(--base-padding) 0;
+  }
+  li {
+    list-style-type: none;
+  }
+  li::before {
+    content: "-";
+    padding: 0 var(--base-padding);
+  }
+</style>

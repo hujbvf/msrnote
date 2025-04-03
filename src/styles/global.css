@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0");
+
+:root {
+  --light-color: rgb(250, 249, 247);
+  --base-color: rgb(229, 228, 227);
+  --middle-color: rgb(211, 210, 209);
+  --shadow-color: rgb(153, 152, 151);
+  --dark-color: rgb(89, 88, 88);
+  --red-color: rgb(203, 126, 90);
+
+  --smaller-padding: 10px;
+  --small-padding: 15px;
+  --base-padding: 20px;
+  --big-padding: 30px;
+  --bigger-padding: 100px;
+
+  --smaller-font: 11px;
+  --small-font: 13px;
+  --base-font: 16px;
+  --big-font: 25px;
+  --bigger-font: 30px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: var(--base-font);
+  font-weight: 400;
+}
+
+p,
+h1,
+h2,
+h3,
+a,
+li {
+  color: var(--dark-color);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: var(--base-color);
+}
+
+main {
+  width: 100%;
+  height: auto;
+}
