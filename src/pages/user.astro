@@ -1,0 +1,19 @@
+---
+import Head from "../components/page/Head.astro";
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <Head title="ユーザー" description="ユーザーページ" index={false} />
+  </head>
+  <body ontouchend="">
+    <main>
+      <app-screen></app-screen>
+    </main>
+  </body>
+</html>
+
+<script>
+  import "../components/screen/app-screen.ts";
+</script>

@@ -1,5 +1,43 @@
 {
+  // 継承する設定ファイル
   "extends": "astro/tsconfigs/strict",
+  // コンパイル対象のファイル
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  // 除外するファイル
+  "exclude": ["dist"],
+  // コンパイルオプション
+  "compilerOptions": {
+    // 最新のJavaScript仕様を使用
+    "target": "es2022",
+    // ESモジュールを使用
+    "module": "esnext",
+    // Nodeのモジュール解決方法を使用
+    "moduleResolution": "nodenext",
+    // DOM APIとESNEXTの機能を使用
+    "lib": ["esnext", "dom"],
+    // 厳密な型チェックを行う
+    "strict": true,
+    // ESモジュールとCommonJSモジュールを相互に変換する
+    "esModuleInterop": true,
+    // 型定義ファイル(*.d.ts)を生成
+    "declaration": true,
+    // ソースマップを生成(デバッグ時に使用)
+    "sourceMap": true,
+    // node_modules内の型チェックをスキップ
+    "skipLibCheck": true,
+    // `any`の暗黙的使用を許可
+    "noImplicitAny": false,
+    // デコレーターを使用
+    "experimentalDecorators": true,
+    // クラスフィールドを`defineProperty`で定義する
+    "useDefineForClassFields": true
+  },
+  // プラグインの設定
+  "plugins": [
+    {
+      // Litのプラグイン
+      "name": "ts-lit-plugin",
+      "strict": true
+    }
+  ]
 }
