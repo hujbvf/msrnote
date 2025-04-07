@@ -29,8 +29,8 @@
     "noImplicitAny": false,
     // デコレーターを使用
     "experimentalDecorators": true,
-    // クラスフィールドを`defineProperty`で定義する
-    "useDefineForClassFields": true
+    // クラスフィールドを`defineProperty`で定義しない
+    "useDefineForClassFields": false
   },
   // プラグインの設定
   "plugins": [
