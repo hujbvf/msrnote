@@ -30,14 +30,15 @@
     // デコレーターを使用
     "experimentalDecorators": true,
     // クラスフィールドを`defineProperty`で定義しない
-    "useDefineForClassFields": false
-  },
-  // プラグインの設定
-  "plugins": [
-    {
-      // Litのプラグイン
-      "name": "ts-lit-plugin",
-      "strict": true
-    }
-  ]
+    "useDefineForClassFields": false,
+    // プラグインの設定
+    "plugins": [
+      {
+        // Litのプラグイン
+        "name": "ts-lit-plugin",
+        // 厳密な型チェックを行う
+        "strict": true
+      }
+    ]
+  }
 }
