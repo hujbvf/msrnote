@@ -1,8 +1,10 @@
 import { LitElement, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 
 import { globalStyles } from "../style/global-style.ts";
 import { centerStyles } from "../style/center-style.ts";
+
+import "../part/tab-changer.ts";
 
 @customElement("center-screen")
 export class CenterScreen extends LitElement {
@@ -12,6 +14,10 @@ export class CenterScreen extends LitElement {
   // 右画面の開閉状態
   @property({ type: Boolean, reflect: true })
   right_active = false;
+
+  // 現在のタブ
+  @state()
+  private current_tab = "canvas";
 
   static styles = [globalStyles, centerStyles];
 
@@ -62,7 +68,10 @@ export class CenterScreen extends LitElement {
         </span>
       </div>
 
-      <div class="body"></div>
+      <div class="body">
+        <!--タブの切り替え-->
+        <tab-changer .current_tab=${this.current_tab}></tab-changer>
+      </div>
     `;
   }
 }

@@ -12,10 +12,10 @@ import "./center-screen.ts";
 export class AppScreen extends LitElement {
   // 左画面の開閉状態
   @property({ type: Boolean, reflect: true })
-  left_active = true;
+  left_active = false;
   // 右画面の開閉状態
   @property({ type: Boolean, reflect: true })
-  right_active = true;
+  right_active = false;
 
   static styles = [globalStyles, appStyles];
 
