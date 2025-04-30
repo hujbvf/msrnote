@@ -69,9 +69,9 @@ export class NoteGroupButton extends LitElement {
     // keydownイベント（Enterキー）
     const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Enter" && !isComposing) {
-        console.log("Enter");
         this._changeNameEnd();
-        name.blur(); // フォーカスを外す
+
+        name.blur();
       }
     };
 
@@ -79,9 +79,9 @@ export class NoteGroupButton extends LitElement {
     const handleMousedown = (event: Event) => {
       const path = event.composedPath(); // イベントの伝播経路を取得
       if (!path.includes(name)) {
-        console.log("Mousedown");
         this._changeNameEnd();
-        name.blur(); // フォーカスを外す
+
+        name.blur();
       }
     };
 
@@ -100,9 +100,7 @@ export class NoteGroupButton extends LitElement {
 
   // ノートの名前変更完了
   private _changeNameEnd() {
-    console.log("ノートの名前変更完了");
-
-    const name = this.shadowRoot?.querySelector(".name") as HTMLDivElement;
+    const name = this.shadowRoot?.getElementById("name") as HTMLDivElement;
     name.contentEditable = "false";
 
     if (name.innerText.trim().length > 0) {

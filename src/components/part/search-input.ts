@@ -40,7 +40,6 @@ export class SearchInput extends LitElement {
   ];
 
   private _focusQueryInput() {
-    console.log("入力開始");
     const input = this.shadowRoot?.getElementById(
       "query_input",
     ) as HTMLInputElement;
@@ -60,9 +59,9 @@ export class SearchInput extends LitElement {
     // keydownイベント（Enterキー）
     const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === "Enter" && !isComposing) {
-        console.log("Enter");
         this._blurQueryInput();
-        input.blur(); // フォーカスを外す
+
+        input.blur();
       }
     };
 
@@ -70,9 +69,9 @@ export class SearchInput extends LitElement {
     const handleMousedown = (event: Event) => {
       const path = event.composedPath(); // イベントの伝播経路を取得
       if (!path.includes(input)) {
-        console.log("Mousedown");
         this._blurQueryInput();
-        input.blur(); // フォーカスを外す
+
+        input.blur();
       }
     };
 
@@ -87,8 +86,6 @@ export class SearchInput extends LitElement {
 
   // ノートの名前変更完了
   private _blurQueryInput() {
-    console.log("ノートの名前変更完了");
-
     const input = this.shadowRoot?.getElementById(
       "query_input",
     ) as HTMLInputElement;
@@ -113,7 +110,7 @@ export class SearchInput extends LitElement {
           placeholder=${this.placeholder}
           @focus=${this._focusQueryInput}
         />
-        <button>
+        <button @click=${this._blurQueryInput}>
           <span class="icon">search</span>
         </button>
       </div>

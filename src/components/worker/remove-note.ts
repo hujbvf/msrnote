@@ -27,7 +27,6 @@ async function removeFromOPFS(notePath: string, noteID: string) {
     noteDir = `${notePath}/${noteID}/note.sqlite3`;
     await removeEntryByPath(root, noteDir, { recursive: true });
   }
-  self.postMessage(`OPFSから${noteDir}を削除しました。`);
 }
 
 async function removeEntryByPath(
@@ -37,10 +36,6 @@ async function removeEntryByPath(
 ): Promise<void> {
   const parts = pathString.split("/").filter(Boolean);
 
-  if (parts.length === 0) {
-    self.postMessage("空のパスは許可されていません。");
-  }
-
   const entryName = parts.pop()!; // 最後のファイル or ディレクトリ名
   let currentDir = root;
 
@@ -49,12 +44,7 @@ async function removeEntryByPath(
     currentDir = await currentDir.getDirectoryHandle(part);
   }
 
-  // 削除を試みる（まずファイル、だめならフォルダとして）
-  try {
-    await currentDir.removeEntry(entryName, options);
-  } catch (err: any) {
-    self.postMessage(`"${pathString}"の削除に失敗しました:`, err);
-  }
+  await currentDir.removeEntry(entryName, options);
 }
 
 // ディレクトリツリーからノートを削除
@@ -112,8 +102,6 @@ async function removeFromDirTree(notePath: string, noteID: string) {
         bind: [noteID],
       });
     }
-
-    self.postMessage(`${noteID}を削除しました。`);
   } finally {
     db.close();
   }

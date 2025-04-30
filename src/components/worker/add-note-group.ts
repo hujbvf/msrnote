@@ -7,21 +7,13 @@ interface noteGroupData {
   path: string; // local/note_group_<UUID> | cloud/note_group_<UUID>
 }
 
-// メッセージ送信
-
-let log: any[] = [];
-
-function sendMessage() {
-  self.postMessage(log);
-}
-
 // メッセージ受信
 self.onmessage = async (event: MessageEvent) => {
   await addNoteGroup(event.data);
 
   await addNoteToTree(event.data);
 
-  sendMessage();
+  self.postMessage(null);
 };
 
 // OPFSにフォルダを作成
@@ -32,8 +24,6 @@ async function addNoteGroup(noteGroupData: noteGroupData) {
   await getNestedDirectoryHandle(root, groupName, {
     create: true,
   });
-
-  log.push("ノートグループを作成しました。", groupName);
 }
 
 // サブディレクトリを取得 & 作成
@@ -101,13 +91,6 @@ async function addNoteToTree(noteGroupData: noteGroupData) {
       sql: "INSERT INTO groups (id, name, path, num) VALUES (?, ?, ?, ?)",
       bind: [noteGroupData.id, noteGroupData.name, noteGroupData.path, 0],
     });
-    log.push("ノートグループを追加しました。", noteGroupData.path);
-    const noteGroupValues = db.exec({
-      sql: "SELECT * FROM groups",
-      rowMode: "object",
-      returnValue: "resultRows",
-    });
-    log.push("ノートグループの一覧", noteGroupValues);
   } finally {
     db.close();
   }

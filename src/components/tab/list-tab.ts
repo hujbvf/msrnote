@@ -110,9 +110,7 @@ export class ListTab extends LitElement {
 
     worker.postMessage(noteData);
 
-    worker.onmessage = (event) => {
-      console.log("ローカルにノートを新規作成しました: ", event.data);
-
+    worker.onmessage = () => {
       this._noteLocalResult = [
         ...this._noteLocalResult,
         {
@@ -148,9 +146,7 @@ export class ListTab extends LitElement {
 
     worker.postMessage(noteGroupData);
 
-    worker.onmessage = (event) => {
-      console.log("ローカルにノートグループを新規作成しました: ", event.data);
-
+    worker.onmessage = () => {
       this._noteLocalResult = [
         ...this._noteLocalResult,
         {
@@ -187,9 +183,7 @@ export class ListTab extends LitElement {
 
     worker.postMessage(noteData);
 
-    worker.onmessage = (event) => {
-      console.log("クラウドにノートを新規作成しました: ", event.data);
-
+    worker.onmessage = () => {
       this._noteCloudResult = [
         ...this._noteCloudResult,
         {
@@ -225,9 +219,7 @@ export class ListTab extends LitElement {
 
     worker.postMessage(noteGroupData);
 
-    worker.onmessage = (event) => {
-      console.log("クラウドにノートグループを新規作成しました: ", event.data);
-
+    worker.onmessage = () => {
       this._noteCloudResult = [
         ...this._noteCloudResult,
         {
@@ -349,13 +341,7 @@ export class ListTab extends LitElement {
           notePath: path,
         };
 
-        console.log("削除したローカルノート: ", noteData);
-
         worker.postMessage(noteData);
-
-        worker.onmessage = (event) => {
-          console.log(event.data);
-        };
       });
     }
 
@@ -388,8 +374,6 @@ export class ListTab extends LitElement {
           noteID: element.id,
           notePath: path,
         };
-
-        console.log("削除したクラウドノート: ", noteData);
 
         worker.postMessage(noteData);
 
@@ -440,7 +424,6 @@ export class ListTab extends LitElement {
 
   // ノートを検索
   private _searchNote(event: CustomEvent) {
-    console.log("ノートを検索: ", event.detail);
     const worker = new Worker(
       new URL("../worker/search-note.ts", import.meta.url),
       {
@@ -453,7 +436,6 @@ export class ListTab extends LitElement {
     worker.postMessage(query);
 
     worker.onmessage = (event) => {
-      console.log("ノートを検索しました: ", event.data);
       this._path = "search";
       this._dir_name = "検索結果";
 
@@ -586,15 +568,11 @@ export class ListTab extends LitElement {
     // メッセージを受信してデータを結合
     worker.onmessage = (event) => {
       if (event.data.length === 0) {
-        console.log("結果がありませんでした。: ", this._path);
-
         this._noteLocalList = this._noteLocalResult;
         this._noteCloudList = this._noteCloudResult;
 
         return;
       }
-
-      console.log("ノートのリストを取得しました: ", event.data);
 
       event.data.forEach((note: any) => {
         if (note.path.startsWith("local")) {
@@ -745,7 +723,7 @@ export class ListTab extends LitElement {
     } else if (this._path.startsWith("search")) {
       // 検索結果
       return html`
-        <section id="search_section">
+        <section id="local_section">
           ${this._noteLocalList.map(
             (note) => html`
               ${!note.id.startsWith("note_group_")
@@ -766,6 +744,8 @@ export class ListTab extends LitElement {
                   ></note-group-button>`}
             `,
           )}
+        </section>
+        <section id="cloud_section">
           ${this._noteCloudList.map(
             (note) => html`
               ${!note.id.startsWith("note_group_")
