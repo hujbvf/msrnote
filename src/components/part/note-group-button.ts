@@ -5,17 +5,20 @@ import { globalStyles } from "../style/global-style.ts";
 
 @customElement("note-group-button")
 export class NoteGroupButton extends LitElement {
-  // ノートの名前
+  // ノートグループの名前
   @property({ type: String })
   name = "";
   // ノートの数
   @property({ type: String })
   num = "";
+  // ノートグループの選択状態
+  @property({ type: Boolean })
+  selected = false;
 
   static styles = [
     globalStyles,
     css`
-      button {
+      .button {
         display: flex;
         align-items: center;
         width: 100%;
@@ -23,6 +26,9 @@ export class NoteGroupButton extends LitElement {
         padding: 5px 0;
         position: relative;
         border-radius: 5px;
+      }
+      .button.selected {
+        background: var(--middle-color);
       }
 
       img {
@@ -43,15 +49,98 @@ export class NoteGroupButton extends LitElement {
     `,
   ];
 
+  // ノートの名前を変更
+  private _changeName() {
+    const name = this.shadowRoot?.getElementById("name") as HTMLDivElement;
+    name.contentEditable = "true";
+
+    let isComposing = false; // IME入力中かどうかを判定するフラグ
+
+    // IME入力開始
+    name.addEventListener("compositionstart", () => {
+      isComposing = true;
+    });
+
+    // IME入力確定
+    name.addEventListener("compositionend", () => {
+      isComposing = false;
+    });
+
+    // keydownイベント（Enterキー）
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Enter" && !isComposing) {
+        console.log("Enter");
+        this._changeNameEnd();
+        name.blur(); // フォーカスを外す
+      }
+    };
+
+    // clickイベント
+    const handleMousedown = (event: Event) => {
+      const path = event.composedPath(); // イベントの伝播経路を取得
+      if (!path.includes(name)) {
+        console.log("Mousedown");
+        this._changeNameEnd();
+        name.blur(); // フォーカスを外す
+      }
+    };
+
+    name.addEventListener("focus", () => {
+      document.body.addEventListener("keydown", handleKeydown);
+      document.body.addEventListener("mousedown", handleMousedown);
+    });
+
+    name.addEventListener("blur", () => {
+      document.body.removeEventListener("keydown", handleKeydown);
+      document.body.removeEventListener("mousedown", handleMousedown);
+    });
+
+    name.focus();
+  }
+
+  // ノートの名前変更完了
+  private _changeNameEnd() {
+    console.log("ノートの名前変更完了");
+
+    const name = this.shadowRoot?.querySelector(".name") as HTMLDivElement;
+    name.contentEditable = "false";
+
+    if (name.innerText.trim().length > 0) {
+      this.name = name.innerText.trim();
+
+      this.dispatchEvent(
+        new CustomEvent("rename-note-group", { bubbles: true, composed: true }),
+      );
+    } else {
+      name.innerText = this.name;
+    }
+  }
+
+  // ノートを開く
+  private _openNote(event: Event) {
+    const target = event.target as HTMLElement;
+
+    if (target.closest("#name")) return;
+
+    this.dispatchEvent(
+      new CustomEvent("open-note", { bubbles: true, composed: true }),
+    );
+  }
+
   render() {
     return html`
-      <button>
+      <div
+        class="${this.selected ? "selected button" : "button"}"
+        @click=${this._openNote}
+      >
         <img src="/imgs/note-group.png" alt="ノートグループ" loading="lazy" />
         <span class="disc">
-          <div class="name">${this.name}</div>
+          <div class="name" id="name" @dblclick=${this._changeName}>
+            ${this.name}
+          </div>
           <div class="num">${this.num}項目</div>
         </span>
-      </button>
+      </div>
     `;
   }
 }

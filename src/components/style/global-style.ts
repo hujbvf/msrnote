@@ -20,6 +20,22 @@ export const globalStyles = css`
     outline: none;
   }
 
+  label {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+
+  select.hidden {
+    width: 0;
+    height: 0;
+    position: absolute;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
   iframe {
     width: 100%;
     height: 100%;

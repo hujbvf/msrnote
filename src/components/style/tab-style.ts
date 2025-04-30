@@ -44,12 +44,4 @@ export const tabStyles = css`
     margin: var(--smaller-padding) 0;
     overflow-y: auto;
   }
-
-  .edit select {
-    width: auto;
-    height: 0;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  }
 `;
