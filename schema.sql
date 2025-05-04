@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS Users;
+
+CREATE TABLE IF NOT EXISTS Users (
+  UserId TEXT PRIMARY KEY,
+  UserName TEXT DEFAULT "匿名",
+  UserEmail TEXT,
+  UserPlan TEXT DEFAULT "Free",
+  UserCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
+  OtpValue TEXT,
+  OtpSecret TEXT
+);

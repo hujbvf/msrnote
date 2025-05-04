@@ -1,7 +1,14 @@
 import { defineConfig } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
 
 const config: ReturnType<typeof defineConfig> = defineConfig({
   site: "https://msrnote.com/",
+  output: "server",
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
   server: {
     headers: {
       // SQLite ファイルを OPFS に保存するためのヘッダー

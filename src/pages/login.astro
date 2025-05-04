@@ -1,0 +1,109 @@
+---
+import Layout from "../layouts/LoginLayout.astro";
+---
+
+<Layout
+  title="ログイン"
+  description="MsrNote アプリにログインしましょう。"
+  index={false}
+>
+  <form id="login_form" action="/api/send-otp" method="post">
+    <input
+      type="email"
+      id="email"
+      placeholder="メールアドレスを入力"
+      required
+    />
+    <button type="submit">ログインする</button>
+  </form>
+  <p id="loading_message"></p>
+  <p id="error_message"></p>
+</Layout>
+
+<style>
+  form {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+  }
+
+  input {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: var(--smaller-padding);
+    background: var(--base-color);
+    margin: var(--smaller-padding) 0;
+    border: solid 2px var(--middle-color);
+    border-radius: 5px;
+    color: var(--dark-color);
+    font-size: var(--base-font);
+  }
+  input:disabled {
+    background: var(--middle-color);
+    color: var(--dark-color);
+    opacity: 1;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: var(--smaller-padding);
+    margin: var(--smaller-padding) 0;
+    background: var(--shadow-color);
+    border: none;
+    border-radius: 5px;
+    color: var(--light-color);
+    font-size: var(--base-font);
+  }
+
+  #error_message {
+    color: var(--red-color);
+  }
+</style>
+
+<script>
+  const form = document.getElementById("login_form") as HTMLFormElement;
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email") as HTMLInputElement;
+    email.disabled = true;
+
+    const loadingMessage = document.getElementById(
+      "loading_message",
+    ) as HTMLElement;
+    loadingMessage.textContent = "読み込み中です...";
+
+    const response = await fetch(form.action, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email.value }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // 送信完了
+      const id = result.id;
+
+      // /otp/[id] にリダイレクトする
+      window.location.href = `/otp/?id=${id}`;
+    } else {
+      // 送信失敗
+      console.log("ログイン失敗: ", result.error);
+
+      email.disabled = false;
+      loadingMessage.textContent = "";
+
+      const errorMessage = document.getElementById(
+        "error_message",
+      ) as HTMLElement;
+      errorMessage.textContent =
+        "送信に失敗しました。もう一度入力してください。";
+    }
+  });
+</script>

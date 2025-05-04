@@ -1,0 +1,14 @@
+{
+  "name": "msrnote-worker",
+  "compatibility_date": "2025-05-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "msrnote-user",
+      "database_id": "67157452-4255-4357-b1d7-6f2f1366b129"
+    }
+  ]
+}

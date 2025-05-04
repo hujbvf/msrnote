@@ -9,12 +9,18 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.5.2",
     "@lit/task": "^1.0.2",
     "@sqlite.org/sqlite-wasm": "^3.49.1-build4",
+    "@types/jsonwebtoken": "^9.0.9",
     "astro": "^5.7.5",
+    "jsonwebtoken": "^9.0.2",
     "lit": "^3.2.1",
+    "otplib": "^12.0.1",
     "prettier-plugin-astro": "^0.14.1",
+    "resend": "^4.5.0",
     "ts-lit-plugin": "^2.0.2",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "wrangler": "^4.13.2"
   }
 }
