@@ -1,5 +1,5 @@
 export async function POST(): Promise<Response> {
-  // クッキーを設定
+  // ヘッダーを設定
   const headers = new Headers();
 
   // クッキーの有効期限を設定
@@ -15,7 +15,7 @@ export async function POST(): Promise<Response> {
   headers.append("Location", "/login/");
 
   return new Response(null, {
-    status: 302, // 302は一時的なリダイレクト
+    status: 302,
     headers,
   });
 }

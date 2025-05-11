@@ -1,5 +1,6 @@
 import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { provide } from "@lit/context";
 
 import { globalStyles } from "../style/global-style.ts";
 import { appStyles } from "../style/app-style.ts";
@@ -7,6 +8,8 @@ import { appStyles } from "../style/app-style.ts";
 import "./left-screen.ts";
 import "./right-screen.ts";
 import "./center-screen.ts";
+
+import { planContext, type PlanData } from "../context/plan-context.ts";
 
 @customElement("app-screen")
 export class AppScreen extends LitElement {
@@ -16,6 +19,13 @@ export class AppScreen extends LitElement {
   // 右画面の開閉状態
   @property({ type: Boolean, reflect: true })
   right_active = false;
+  // プランの状態
+  @property({ type: String })
+  plan = "free";
+
+  // プランの状態
+  @provide({ context: planContext })
+  planData: PlanData = "free";
 
   static styles = [globalStyles, appStyles];
 
@@ -27,6 +37,19 @@ export class AppScreen extends LitElement {
     this.addEventListener("right_toggle", this._rightToggle.bind(this));
     // 画面リサイズ時にサイド画面を閉じるイベントリスナーを追加
     window.addEventListener("resize", this._sideClose.bind(this));
+    // プランの状態を変更するイベントリスナーを追加
+    this.addEventListener("plan_change", this._planChange);
+  }
+
+  firstUpdated() {
+    // プランの状態を提供する
+    this.planData = this.plan;
+  }
+
+  // プランの状態を変更する
+  private _planChange(e: CustomEvent) {
+    this.plan = e.detail.plan;
+    this.planData = this.plan;
   }
 
   // 画面がリサイズされたらサイド画面を閉じる

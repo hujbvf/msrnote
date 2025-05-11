@@ -1,10 +1,18 @@
 import { LitElement, html, css } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 import { globalStyles } from "../style/global-style.ts";
 
+interface TocInputProps {
+  name: string;
+  value: string;
+}
+
 @customElement("toc-input")
 export class TocInput extends LitElement {
+  @property()
+  items: TocInputProps[] = [];
+
   static styles = [
     globalStyles,
     css`
@@ -31,12 +39,28 @@ export class TocInput extends LitElement {
     `,
   ];
 
+  private _moveToSection(e: Event) {
+    const target = e.target as HTMLSelectElement;
+    const value = target.value;
+
+    this.dispatchEvent(
+      new CustomEvent("toc-select", {
+        bubbles: true,
+        composed: true,
+        detail: value,
+      }),
+    );
+  }
+
   render() {
     return html`
       <div class="toc">
-        <select id="toc" id="toc">
+        <select id="toc" id="toc" @change="${this._moveToSection}">
           <option selected>目次</option>
           <option value="top">トップ</option>
+          ${this.items.map(
+            (item) => html`<option value="${item.value}">${item.name}</option>`,
+          )}
         </select>
         <label for="toc" class="icon">toc</label>
       </div>

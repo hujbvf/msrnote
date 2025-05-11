@@ -1,12 +1,14 @@
 ---
 import Layout from "../layouts/UserLayout.astro";
 
-/*
 import jwt from "jsonwebtoken";
 
 const { env } = (Astro.locals as any).runtime;
+
 const jwtSecret = env.AUTH_SECRET;
 const cookie = Astro.cookies.get("token");
+
+let userPlan: string = "free";
 
 if (cookie) {
   const cookieValue = cookie.value;
@@ -14,21 +16,33 @@ if (cookie) {
   try {
     const decoded = jwt.verify(cookieValue, jwtSecret);
     if (!decoded) return;
-    console.log("認証完了");
+
+    const userId = (decoded as jwt.JwtPayload).id as string;
+    console.log("認証完了", userId);
+
+    // データベースを取得
+    const db = env.DB;
+
+    const user = await db
+      .prepare("SELECT * FROM Users WHERE UserId = ?")
+      .bind(userId)
+      .first();
+
+    userPlan = user?.StripePlan;
+    console.log("ユーザープラン", userPlan);
   } catch (error) {
     console.error(error);
     // ログインページにリダイレクト
-    return Astro.redirect("/login/");
+    //return Astro.redirect("/login/");
   }
 } else {
   // ログインページにリダイレクト
-  return Astro.redirect("/login/");
+  //return Astro.redirect("/login/");
 }
-*/
 ---
 
 <Layout title="ユーザー" description="ユーザーページ。" index={false}>
-  <app-screen></app-screen>
+  <app-screen plan={userPlan}></app-screen>
 </Layout>
 
 <script>

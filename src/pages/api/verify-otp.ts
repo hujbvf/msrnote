@@ -13,7 +13,7 @@ export async function POST(context: any): Promise<Response> {
   // データベースを取得
   const db = env.DB;
 
-  // 既存のユーザーにメールアドレスが存在するか確認
+  // 既存のユーザーに ID が存在するか確認
   const user = await db
     .prepare("SELECT * FROM Users WHERE UserId = ?")
     .bind(id)
@@ -24,7 +24,7 @@ export async function POST(context: any): Promise<Response> {
       status: 404,
     });
 
-  // authenticator.verifyを使ってOTPの有効性を確認
+  // authenticator.verify を使って OTP の有効性を確認
   const token = otp;
   const secret = user.OtpSecret as string;
   if (!secret) {
@@ -41,7 +41,7 @@ export async function POST(context: any): Promise<Response> {
       status: 400,
     });
 
-  // JWTを生成
+  // JWT を生成
   const jwtId = { id: id };
   const jwtSecret = env.AUTH_SECRET as string;
   const jwtOptions = {
@@ -60,7 +60,7 @@ export async function POST(context: any): Promise<Response> {
     `token=${jwtToken}; Expires=${expires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict${import.meta.env.MODE === "production" ? "; Secure" : ""}`,
   );
 
-  // OTPが正しい場合はログイン成功
+  // OTP が正しい場合はログイン成功
   return new Response(JSON.stringify({ message: "ログイン成功", id: id }), {
     status: 200,
     headers,

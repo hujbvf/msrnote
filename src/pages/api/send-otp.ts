@@ -1,5 +1,5 @@
+import Stripe from "stripe";
 import { authenticator } from "otplib";
-import { v4 as uuidv4 } from "uuid";
 import { Resend } from "resend";
 
 export async function POST(context: any): Promise<Response> {
@@ -28,19 +28,27 @@ export async function POST(context: any): Promise<Response> {
     .bind(email)
     .first();
 
-  // 送信するOTP
+  // 送信する OTP
   let sendOtp: string;
 
-  // レスポンスで返すユーザーID
+  // レスポンスで返すユーザー ID
   let responseId: string;
 
   if (!user) {
-    // UUIDを生成
-    const id = uuidv4();
+    // Stripeインスタンスを作成
+    const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+
+    // Stripe カスタマーを作成
+    const customer = await stripe.customers.create({
+      email: email as string,
+    });
+
+    // ID を生成
+    const id = customer.id;
     responseId = id;
     // ランダムなシークレットキーを生成
     const secret = authenticator.generateSecret();
-    // シークレットキーからOTPを生成
+    // シークレットキーから OTP を生成
     const otp = authenticator.generate(secret);
     sendOtp = otp;
 
@@ -52,10 +60,10 @@ export async function POST(context: any): Promise<Response> {
       .bind(id, email, secret, otp)
       .run();
   } else {
-    // ユーザーのIDを指定
+    // ユーザーの ID を指定
     const id = user.UserId as string;
     responseId = id;
-    // OTPを再生成
+    // OTP を再生成
     const otp = authenticator.generate(user.OtpSecret as string);
     sendOtp = otp;
 
@@ -66,7 +74,7 @@ export async function POST(context: any): Promise<Response> {
       .run();
   }
 
-  // Resendを使用してメール送信
+  // Resend を使用してメール送信
   const resend = new Resend(env.AUTH_RESEND_KEY);
 
   const { data, error } = await resend.emails.send({

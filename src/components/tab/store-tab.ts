@@ -1,13 +1,20 @@
 import { LitElement, html, css } from "lit";
 import { customElement } from "lit/decorators.js";
+import { consume } from "@lit/context";
 
 import { globalStyles } from "../style/global-style.ts";
 import { tabStyles } from "../style/tab-style.ts";
 
 import "../part/toc-input.ts";
 
+import { planContext, type PlanData } from "../context/plan-context.ts";
+
 @customElement("store-tab")
 export class StoreTab extends LitElement {
+  // プランの状態
+  @consume({ context: planContext, subscribe: true })
+  planData?: PlanData;
+
   static styles = [
     globalStyles,
     tabStyles,
@@ -34,10 +41,14 @@ export class StoreTab extends LitElement {
         text-align: center;
         border: solid 2px var(--middle-color);
         border-radius: 5px;
-        text-decoration: none;
       }
       .buy_button:hover {
         background: var(--middle-color);
+      }
+      .buy_button:disabled {
+        background: var(--shadow-color);
+        color: var(--light-color);
+        border: solid 2px var(--shadow-color);
       }
 
       .payment_area {
@@ -60,6 +71,74 @@ export class StoreTab extends LitElement {
     `,
   ];
 
+  // チェックアウトセッションを作成
+  private async _createCheckoutSession(event: Event) {
+    const target = event.target as HTMLButtonElement;
+    const priceId = target.id;
+
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ priceId: priceId }),
+    });
+
+    const result = await response.json();
+
+    // 送信完了
+    const url = result.url;
+    // リダイレクト
+    if (url) window.location.href = url;
+
+    // プランの状態を更新
+    const plan = result.plan;
+    if (plan)
+      this.dispatchEvent(
+        new CustomEvent("plan_change", {
+          bubbles: true,
+          composed: true,
+          detail: { plan: plan },
+        }),
+      );
+  }
+
+  // カスタマーポータルを開く
+  private async _createPortalSession() {
+    const response = await fetch("/api/create-portal-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const result = await response.json();
+
+    // 送信完了
+    const url = result.url;
+    // リダイレクト
+    if (url) window.location.href = url;
+  }
+
+  private _moveToToc(event: CustomEvent) {
+    const id = event.detail;
+
+    // idの要素を取得
+    let element;
+    if (id === "top") {
+      element = this.shadowRoot?.querySelector(".content_area")
+        ?.firstElementChild as HTMLElement;
+      console.log(element.outerHTML);
+    } else {
+      element = this.shadowRoot?.getElementById(id) as HTMLElement;
+    }
+
+    if (element) {
+      // スクロール
+      element.scrollIntoView({
+        behavior: "smooth", // スムーズにスクロール
+        block: "start", // 上部に合わせる
+        inline: "nearest", // 左右は無視
+      });
+    }
+  }
+
   render() {
     return html`
       <!--タイトル-->
@@ -70,31 +149,52 @@ export class StoreTab extends LitElement {
 
       <!--目次-->
       <div class="toc_area">
-        <toc-input></toc-input>
+        <toc-input
+          @toc-select=${this._moveToToc}
+          .items=${[
+            { name: "フリープラン", value: "free" },
+            { name: "スタンダードプラン", value: "standard" },
+            { name: "プロプラン", value: "pro" },
+          ]}
+        ></toc-input>
       </div>
 
       <!--内容-->
-      <div class="content_area">
-        <section>
+      <div class="content_area" id="top">
+        <section id="free">
           <h2>フリープラン</h2>
-          <p>￥0/月</p>
-          <a class="buy_button">フリープラン購入</a>
+          <p>￥0 / 月</p>
+          ${this.planData === "free"
+            ? html`<button class="buy_button" disabled>現在のプラン</button>`
+            : html`
+                <button
+                  class="buy_button"
+                  id="price_1RLIin03X1TtY8CFon4AaIwB"
+                  @click=${this._createCheckoutSession}
+                >
+                  フリープラン購入
+                </button>
+              `}
           <li>ノートローカル保存: 無制限</li>
           <li>ノートクラウド保存: ×</li>
           <li>編集可能ノートの作成: ○</li>
           <li>編集不可ノートの作成: ×</li>
           <li>ノートの公開・限定公開: ×</li>
         </section>
-        <section>
+        <section id="standard">
           <h2>スタンダードプラン</h2>
-          <p>￥350/月</p>
-          <a
-            class="buy_button"
-            href="https://buy.stripe.com/test_9AQaIzgAi7MW7yocMN"
-            target="_blank"
-            rel="noopener noreferrer"
-            >スタンダードプラン購入</a
-          >
+          <p>￥350 / 月</p>
+          ${this.planData === "standard"
+            ? html`<button class="buy_button" disabled>現在のプラン</button>`
+            : html`
+                <button
+                  class="buy_button"
+                  id="price_1RLIin03X1TtY8CFgCHgZI3j"
+                  @click=${this._createCheckoutSession}
+                >
+                  スタンダードプラン購入
+                </button>
+              `}
           <li>ノートローカル保存: 無制限</li>
           <li>ノートクラウド保存: 15GB</li>
           <li>編集可能ノートの作成: ○</li>
@@ -102,41 +202,33 @@ export class StoreTab extends LitElement {
           <li>ノートの公開・限定公開: ○</li>
         </section>
         <section>
-          <h2>プロプラン</h2>
-          <p>￥950/月</p>
-          <a
-            class="buy_button"
-            href="https://buy.stripe.com/test_eVa4kb1Fo6IS3i83ce"
-            target="_blank"
-            rel="noopener noreferrer"
-            >プロプラン購入</a
-          >
+          <h2 id="pro">プロプラン</h2>
+          <p>￥950 / 月</p>
+          ${this.planData === "pro"
+            ? html`<button class="buy_button" disabled>現在のプラン</button>`
+            : html`
+                <button
+                  class="buy_button"
+                  id="price_1RLIin03X1TtY8CFNT7halsD"
+                  @click=${this._createCheckoutSession}
+                >
+                  プロプラン購入
+                </button>
+              `}
           <li>ノートローカル保存: 無制限</li>
           <li>ノートクラウド保存: 50GB</li>
           <li>編集可能ノートの作成: ○</li>
           <li>編集不可ノートの作成: ○</li>
           <li>ノートの公開・限定公開: ○</li>
         </section>
-
-        <a
-          href="billing.stripe.com/p/login/test_8wM9DM5wIg5Y2hGdQQ"
-          target="_blank"
-          rel="noopener noreferrer"
-          >カスタマーポータル</a
-        >
       </div>
 
       <!--決済に関する設定-->
       <div class="payment_area">
         <!--支払い設定-->
-        <button>
+        <button @click=${this._createPortalSession}>
           <span class="icon">account_balance_wallet</span>
           <span class="name">財布</span>
-        </button>
-        <!--購入商品設定-->
-        <button>
-          <span class="icon">shopping_cart</span>
-          <span class="name">カート</span>
         </button>
       </div>
     `;

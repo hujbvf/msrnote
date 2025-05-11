@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+export const prerender = true;
+---
+
+<Layout title="ご注文完了" description="ご注文が完了しました。" index={false}>
+  <p>ご注文ありがとうございます。</p>
+  <div class="button_area">
+    <a href="/user/">MsrNoteのアプリページに戻る</a>
+  </div>
+</Layout>
+
+<style>
+  .button_area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    padding: 0 var(--base-padding);
+    margin: var(--base-padding) 0;
+    border-top: 1px solid var(--dark-color);
+    border-bottom: 1px solid var(--dark-color);
+  }
+  .button_area::after {
+    content: ">";
+    display: inline-block;
+    width: auto;
+    height: auto;
+    padding-left: var(--base-padding);
+  }
+  .button_area:hover {
+    background: var(--middle-color);
+  }
+
+  .button_area a {
+    display: inline-block;
+    flex: 1;
+    width: 100%;
+    height: auto;
+    padding: var(--base-padding);
+    margin: 0 auto;
+    text-decoration: none;
+  }
+</style>

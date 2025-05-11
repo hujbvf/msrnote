@@ -14,7 +14,7 @@ import Layout from "../layouts/LoginLayout.astro";
       placeholder="メールアドレスを入力"
       required
     />
-    <button type="submit">ログインする</button>
+    <button id="login" type="submit">ログインする</button>
   </form>
   <p id="loading_message"></p>
   <p id="error_message"></p>
@@ -57,6 +57,9 @@ import Layout from "../layouts/LoginLayout.astro";
     color: var(--light-color);
     font-size: var(--base-font);
   }
+  button:disabled {
+    color: var(--base-color);
+  }
 
   #error_message {
     color: var(--red-color);
@@ -70,6 +73,8 @@ import Layout from "../layouts/LoginLayout.astro";
 
     const email = document.getElementById("email") as HTMLInputElement;
     email.disabled = true;
+    const login = document.getElementById("login") as HTMLButtonElement;
+    login.disabled = true;
 
     const loadingMessage = document.getElementById(
       "loading_message",
@@ -97,6 +102,7 @@ import Layout from "../layouts/LoginLayout.astro";
       console.log("ログイン失敗: ", result.error);
 
       email.disabled = false;
+      login.disabled = false;
       loadingMessage.textContent = "";
 
       const errorMessage = document.getElementById(
