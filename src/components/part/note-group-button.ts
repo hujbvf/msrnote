@@ -114,14 +114,14 @@ export class NoteGroupButton extends LitElement {
     }
   }
 
-  // ノートを開く
-  private _openNote(event: Event) {
+  // ノートグループを開く
+  private _openNoteGroup(event: Event) {
     const target = event.target as HTMLElement;
 
     if (target.closest("#name")) return;
 
     this.dispatchEvent(
-      new CustomEvent("open-note", { bubbles: true, composed: true }),
+      new CustomEvent("open-note-group", { bubbles: true, composed: true }),
     );
   }
 
@@ -129,7 +129,7 @@ export class NoteGroupButton extends LitElement {
     return html`
       <div
         class="${this.selected ? "selected button" : "button"}"
-        @click=${this._openNote}
+        @click=${this._openNoteGroup}
       >
         <img src="/imgs/note-group.png" alt="ノートグループ" loading="lazy" />
         <span class="disc">

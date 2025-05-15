@@ -41,9 +41,9 @@ export class TabChanger extends LitElement {
           await import("../tab/tool-tab.ts");
           tab = html`<tool-tab></tool-tab>`;
           break;
-        case "forum": // フォーラムタブ
-          await import("../tab/forum-tab.ts");
-          tab = html`<forum-tab></forum-tab>`;
+        case "info": // 基本情報タブ
+          await import("../tab/info-tab.ts");
+          tab = html`<info-tab></info-tab>`;
           break;
         case "canvas": // キャンバスタブ
           await import("../tab/canvas-tab.ts");

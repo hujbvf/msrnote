@@ -33,13 +33,7 @@ export class AppScreen extends LitElement {
     noteDatas: [],
     activeTab: 0,
     addNoteData: (noteData) => {
-      this.tabData = {
-        noteDatas: [noteData, ...this.tabData.noteDatas],
-        activeTab: 0,
-        addNoteData: this.tabData.addNoteData,
-        removeNoteData: this.tabData.removeNoteData,
-        changeActiveTab: this.tabData.changeActiveTab,
-      };
+      this.tabData.noteDatas = [...this.tabData.noteDatas, noteData];
       this.requestUpdate();
     },
     removeNoteData: (sort) => {

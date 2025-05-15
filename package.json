@@ -14,7 +14,7 @@
     "@lit/task": "^1.0.2",
     "@sqlite.org/sqlite-wasm": "^3.49.1-build4",
     "@types/jsonwebtoken": "^9.0.9",
-    "astro": "^5.7.11",
+    "astro": "^5.7.12",
     "jsonwebtoken": "^9.0.2",
     "lit": "^3.2.1",
     "otplib": "^12.0.1",

@@ -74,9 +74,9 @@ export class RightScreen extends LitElement {
           <div class="name">ツール</div>
         </button>
         <!--フォーラムタブ-->
-        <button value="forum" @click=${this._changeTab}>
-          <div class="icon">forum</div>
-          <div class="name">フォーラム</div>
+        <button value="info" @click=${this._changeTab}>
+          <div class="icon">info</div>
+          <div class="name">基本情報</div>
         </button>
       </div>
     `;

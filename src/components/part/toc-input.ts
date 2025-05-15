@@ -10,7 +10,7 @@ interface TocInputProps {
 
 @customElement("toc-input")
 export class TocInput extends LitElement {
-  @property()
+  @property({ type: Array })
   items: TocInputProps[] = [];
 
   static styles = [
@@ -32,8 +32,9 @@ export class TocInput extends LitElement {
       }
 
       label {
-        padding-left: 5px;
-        margin: 0 5px;
+        width: auto;
+        height: auto;
+        padding: 0 5px;
         border-left: solid 2px var(--base-color);
       }
     `,

@@ -7,6 +7,8 @@
   "exclude": ["dist"],
   // コンパイルオプション
   "compilerOptions": {
+    // 型定義ファイル
+    "typeRoots": ["src/types"],
     // 最新のJavaScript仕様を使用
     "target": "es2022",
     // ESモジュールを使用

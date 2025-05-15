@@ -72,12 +72,9 @@ async function addNoteToTree(sqlite3: any, noteData: noteData) {
       }
     }
 
-    db.exec(
-      "CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY, name TEXT, path TEXT, date TEXT)",
-    );
     db.exec({
-      sql: "INSERT INTO notes (id, name, path, date) VALUES (?, ?, ?, ?)",
-      bind: [noteData.id, noteData.name, noteData.path, noteData.date],
+      sql: "INSERT INTO notes (id, name, path, date, size) VALUES (?, ?, ?, ?, ?)",
+      bind: [noteData.id, noteData.name, noteData.path, noteData.date, 0],
     });
   } finally {
     db.close();

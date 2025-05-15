@@ -29,7 +29,7 @@ function fetch(sqlite3: any, notePath: string) {
   try {
     // pathがnotePathと一致するノートを取得
     db.exec(
-      "CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY, name TEXT, path TEXT, date TEXT)",
+      "CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY, name TEXT, path TEXT, date TEXT, size INT)",
     );
     const noteValues = db.exec({
       sql: "SELECT * FROM notes WHERE path = ?",

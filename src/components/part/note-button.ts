@@ -114,9 +114,23 @@ export class NoteButton extends LitElement {
     }
   }
 
+  // ノートを開く
+  private _openNote(event: Event) {
+    const target = event.target as HTMLElement;
+
+    if (target.closest("#name")) return;
+
+    this.dispatchEvent(
+      new CustomEvent("open-note", { bubbles: true, composed: true }),
+    );
+  }
+
   render() {
     return html`
-      <div class="${this.selected ? "selected button" : "button"}">
+      <div
+        class="${this.selected ? "selected button" : "button"}"
+        @click=${this._openNote}
+      >
         <img src="/imgs/note.png" alt="ノート" loading="lazy" />
         <span class="disc">
           <div class="name" id="name" @dblclick=${this._changeName}>

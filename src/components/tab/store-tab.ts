@@ -116,11 +116,12 @@ export class StoreTab extends LitElement {
     if (url) window.location.href = url;
   }
 
+  // 目次の要素に移動
   private _moveToToc(event: CustomEvent) {
     const id = event.detail;
 
     // idの要素を取得
-    let element;
+    let element: HTMLElement | null;
     if (id === "top") {
       element = this.shadowRoot?.querySelector(".content_area")
         ?.firstElementChild as HTMLElement;
@@ -160,7 +161,7 @@ export class StoreTab extends LitElement {
       </div>
 
       <!--内容-->
-      <div class="content_area" id="top">
+      <div class="content_area">
         <section id="free">
           <h2>フリープラン</h2>
           <p>￥0 / 月</p>

@@ -10,6 +10,9 @@ import "../part/note-add-button.ts";
 import { NoteButton } from "../part/note-button.ts";
 import { NoteGroupButton } from "../part/note-group-button.ts";
 
+import type { NoteProps } from "../../types/note.d.ts";
+import { openNote } from "../storage/open-note.ts";
+
 @customElement("list-tab")
 export class ListTab extends LitElement {
   // 現在のディレクトリパス
@@ -460,6 +463,46 @@ export class ListTab extends LitElement {
     };
   }
 
+  // ノートを開く
+  private _openNote(event: CustomEvent) {
+    const target = event.target as NoteButton;
+
+    const id = target.id;
+    let path: string;
+
+    if (this._path === "") {
+      // 親要素が #local_section かどうか確認
+      const isLocalCLosest = target.closest("#local_section");
+
+      path = isLocalCLosest ? "local" : "cloud";
+    } else if (this._path.startsWith("search")) {
+      path = (target as HTMLElement).dataset.path || "";
+    } else {
+      path = this._path;
+    }
+
+    const noteData: NoteProps = {
+      id: id,
+      path: path,
+    };
+
+    // ノートを開く
+    openNote(noteData)
+      .then((result) => {
+        // ノートの内容をコンテキストに追加
+        this.dispatchEvent(
+          new CustomEvent("add-tab", {
+            bubbles: true,
+            composed: true,
+            detail: result,
+          }),
+        );
+      })
+      .catch((error) => {
+        console.error("ノートを開く際にエラーが発生しました:", error);
+      });
+  }
+
   // ノートのパスを移動
   private _moveNotePath(event: CustomEvent) {
     const target = event.target as NoteGroupButton;
@@ -623,13 +666,14 @@ export class ListTab extends LitElement {
                     id=${note.id}
                     name=${note.name}
                     date=${note.date}
+                    @open-note=${this._openNote}
                     @rename-note=${this._renameNote}
                   ></note-button>`
                 : html`<note-group-button
                     id=${note.id}
                     name=${note.name}
                     num=${note.num}
-                    @open-note=${this._moveNotePath}
+                    @open-note-group=${this._moveNotePath}
                     @rename-note-group=${this._renameNoteGroup}
                   ></note-group-button>`}
             `,
@@ -649,13 +693,14 @@ export class ListTab extends LitElement {
                     id=${note.id}
                     name=${note.name}
                     date=${note.date}
+                    @open-note=${this._openNote}
                     @rename-note=${this._renameNote}
                   ></note-button>`
                 : html`<note-group-button
                     id=${note.id}
                     name=${note.name}
                     num=${note.num}
-                    @open-note=${this._moveNotePath}
+                    @open-note-group=${this._moveNotePath}
                     @rename-note-group=${this._renameNoteGroup}
                   ></note-group-button>`}
             `,
@@ -678,13 +723,14 @@ export class ListTab extends LitElement {
                     id=${note.id}
                     name=${note.name}
                     date=${note.date}
+                    @open-note=${this._openNote}
                     @rename-note=${this._renameNote}
                   ></note-button>`
                 : html`<note-group-button
                     id=${note.id}
                     name=${note.name}
                     num=${note.num}
-                    @open-note=${this._moveNotePath}
+                    @open-note-group=${this._moveNotePath}
                     @rename-note-group=${this._renameNoteGroup}
                   ></note-group-button>`}
             `,
@@ -708,13 +754,14 @@ export class ListTab extends LitElement {
                   id=${note.id}
                   name=${note.name}
                   date=${note.date}
+                  @open-note=${this._openNote}
                   @rename-note=${this._renameNote}
                 ></note-button>`
               : html`<note-group-button
                   id=${note.id}
                   name=${note.name}
                   num=${note.num}
-                  @open-note=${this._moveNotePath}
+                  @open-note-group=${this._moveNotePath}
                   @rename-note-group=${this._renameNoteGroup}
                 ></note-group-button>`}
           `,
@@ -732,6 +779,7 @@ export class ListTab extends LitElement {
                     name=${note.name}
                     date=${note.date}
                     data-path="${note.path}"
+                    @open-note=${this._openNote}
                     @rename-note=${this._renameNote}
                   ></note-button>`
                 : html`<note-group-button
@@ -739,7 +787,7 @@ export class ListTab extends LitElement {
                     name=${note.name}
                     num=${note.num}
                     data-path="${note.path}"
-                    @open-note=${this._moveNotePath}
+                    @open-note-group=${this._moveNotePath}
                     @rename-note-group=${this._renameNoteGroup}
                   ></note-group-button>`}
             `,
@@ -754,6 +802,7 @@ export class ListTab extends LitElement {
                     name=${note.name}
                     date=${note.date}
                     data-path="${note.path}"
+                    @open-note=${this._openNote}
                     @rename-note=${this._renameNote}
                   ></note-button>`
                 : html`<note-group-button
@@ -761,7 +810,7 @@ export class ListTab extends LitElement {
                     name=${note.name}
                     num=${note.num}
                     data-path="${note.path}"
-                    @open-note=${this._moveNotePath}
+                    @open-note-group=${this._moveNotePath}
                     @rename-note-group=${this._renameNoteGroup}
                   ></note-group-button>`}
             `,

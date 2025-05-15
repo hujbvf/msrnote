@@ -32,8 +32,9 @@ export class SearchInput extends LitElement {
       }
 
       button {
-        padding-left: 5px;
-        margin: 0 5px;
+        width: auto;
+        height: auto;
+        padding: 0 5px;
         border-left: solid 2px var(--base-color);
       }
     `,
